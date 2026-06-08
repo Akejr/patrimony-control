@@ -30,34 +30,36 @@ interface BottomNavProps {
 export function BottomNav({ active, onChange }: BottomNavProps) {
   return (
     <nav
-      className="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 pb-safe bg-surface border-t border-outline-variant z-50"
+      className="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant z-50 pb-safe"
       aria-label="Navegação principal"
     >
-      {TABS.map((tab) => {
-        const selected = tab.key === active;
-        return (
-          <button
-            key={tab.key}
-            type="button"
-            className={`flex flex-col items-center justify-center w-full h-full active:scale-95 transition-transform duration-150 ${
-              selected
-                ? 'text-primary font-semibold'
-                : 'text-on-surface-variant hover:text-primary-container transition-colors'
-            }`}
-            aria-current={selected ? 'page' : undefined}
-            onClick={() => onChange(tab.key)}
-          >
-            <span
-              className={`material-symbols-outlined mb-1 ${selected ? 'is-filled' : ''}`}
+      <div className="flex justify-around items-stretch h-16 max-w-[1200px] mx-auto">
+        {TABS.map((tab) => {
+          const selected = tab.key === active;
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              className={`flex flex-col items-center justify-center flex-1 active:scale-95 transition-transform duration-150 ${
+                selected
+                  ? 'text-primary font-semibold'
+                  : 'text-on-surface-variant hover:text-primary-container transition-colors'
+              }`}
+              aria-current={selected ? 'page' : undefined}
+              onClick={() => onChange(tab.key)}
             >
-              {tab.icon}
-            </span>
-            <span className="font-label-sm text-[10px] leading-none">
-              {tab.label}
-            </span>
-          </button>
-        );
-      })}
+              <span
+                className={`material-symbols-outlined text-[22px] leading-none ${selected ? 'is-filled' : ''}`}
+              >
+                {tab.icon}
+              </span>
+              <span className="font-label-sm text-[10px] leading-none mt-1">
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }
