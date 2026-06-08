@@ -4,6 +4,7 @@ import HomeScreen from './ui/HomeScreen';
 import AccountsScreen from './ui/AccountsScreen';
 import WeeklyEntryScreen from './ui/WeeklyEntryScreen';
 import ExchangeRatesScreen from './ui/ExchangeRatesScreen';
+import SettingsScreen from './ui/SettingsScreen';
 
 /**
  * Raiz da aplicação: tela ativa + navegação inferior por abas (Início, Contas,
@@ -32,6 +33,7 @@ function App() {
         {tab === 'accounts' && <AccountsScreen />}
         {tab === 'entry' && <WeeklyEntryScreen />}
         {tab === 'rates' && <ExchangeRatesScreen />}
+        {tab === 'settings' && <SettingsScreen />}
       </main>
 
       <BottomNav active={tab} onChange={setTab} />

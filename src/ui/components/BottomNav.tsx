@@ -1,5 +1,5 @@
 /** Identificadores das abas de navegação. */
-export type TabKey = 'home' | 'accounts' | 'entry' | 'rates';
+export type TabKey = 'home' | 'accounts' | 'entry' | 'rates' | 'settings';
 
 interface TabDefinition {
   key: TabKey;
@@ -14,6 +14,7 @@ export const TABS: TabDefinition[] = [
   { key: 'accounts', label: 'Contas', icon: 'account_balance' },
   { key: 'entry', label: 'Registro', icon: 'edit_calendar' },
   { key: 'rates', label: 'Câmbio', icon: 'currency_exchange' },
+  { key: 'settings', label: 'Ajustes', icon: 'settings' },
 ];
 
 interface BottomNavProps {

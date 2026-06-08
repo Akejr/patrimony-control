@@ -14,6 +14,11 @@ import {
 } from '../domain/validation';
 import { toMondayKey } from '../domain/dateUtils';
 import { loadState, saveState } from '../storage/storage';
+import {
+  type SyncConfig,
+  loadSyncConfig,
+  saveSyncConfig,
+} from '../sync/config';
 
 /**
  * Resultado de uma ação que pode falhar por validação de input.
@@ -42,6 +47,8 @@ export interface StoreActions {
   upsertWeeklySnapshot(date: Date, balances: BalancesByAccount): void;
   updateRate(currency: 'BRL' | 'EUR', rate: number): Result;
   setDisplayCurrency(currency: CurrencyCode): void;
+  /** Atualiza a configuração de sincronização (persistida à parte). */
+  setSyncConfig(changes: Partial<SyncConfig>): void;
 }
 
 /**
@@ -50,6 +57,8 @@ export interface StoreActions {
  */
 export interface StoreState extends AppState, StoreActions {
   displayCurrency: CurrencyCode;
+  /** Configuração de sincronização do widget (token/gist). */
+  sync: SyncConfig;
 }
 
 /**
@@ -67,6 +76,8 @@ function toAppState(state: StoreState): AppState {
 // Estado inicial de domínio carregado do Local_Storage na inicialização.
 // (Req. 6.2)
 const initialAppState: AppState = loadState();
+// Config de sync carregada de chave dedicada (separada do AppState).
+const initialSyncConfig: SyncConfig = loadSyncConfig();
 
 export const useStore = create<StoreState>((set) => ({
   // Estado de domínio inicial (carregado do Local_Storage).
@@ -76,6 +87,9 @@ export const useStore = create<StoreState>((set) => ({
 
   // Estado de UI: moeda de exibição (primária = Kwanza).
   displayCurrency: 'KZ',
+
+  // Config de sincronização (widget).
+  sync: initialSyncConfig,
 
   // --- Gestão de Contas (Req. 1.x) ---
 
@@ -210,5 +224,15 @@ export const useStore = create<StoreState>((set) => ({
 
   setDisplayCurrency(currency) {
     set({ displayCurrency: currency });
+  },
+
+  // --- Configuração de sincronização (widget) ---
+
+  setSyncConfig(changes) {
+    set((state) => {
+      const sync: SyncConfig = { ...state.sync, ...changes };
+      saveSyncConfig(sync);
+      return { sync };
+    });
   },
 }));
