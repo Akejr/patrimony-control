@@ -29,4 +29,8 @@ npm run preview  # pré-visualização do build
 
 ## Deploy
 
-O deploy é automático no GitHub Pages via GitHub Actions a cada push na branch `main` (workflow em `.github/workflows/deploy.yml`). O `base` do Vite é `/patrimony-control/` em produção.
+Publicado no GitHub Pages via **deploy por branch**: o build de produção é gerado localmente e enviado para a branch `gh-pages` com `npm run deploy` (usa o pacote `gh-pages`). Em **Settings → Pages**, a origem deve estar como **Deploy from a branch → `gh-pages` / (root)**. O `base` do Vite é `/patrimony-control/` em produção.
+
+```bash
+npm run deploy   # build + publica a dist na branch gh-pages
+```
