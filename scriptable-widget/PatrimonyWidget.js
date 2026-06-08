@@ -21,6 +21,8 @@ const COLORS = {
   bg: new Color("#ffffff"),
   label: new Color("#434656"),
   value: new Color("#131b2e"),
+  positive: new Color("#006d41"),
+  negative: new Color("#ba1a1a"),
   muted: new Color("#737688"),
 };
 
@@ -46,12 +48,39 @@ function formatMoney(n, symbol) {
   return `${sign}${symbol} ${withDots},${dec}`;
 }
 
+function formatPct(p) {
+  if (p === null || p === undefined) return "—";
+  const sign = p > 0 ? "+" : "";
+  return `${sign}${p.toFixed(1).replace(".", ",")}%`;
+}
+
+function colorFor(p) {
+  if (p === null || p === undefined) return COLORS.muted;
+  if (p > 0) return COLORS.positive;
+  if (p < 0) return COLORS.negative;
+  return COLORS.muted;
+}
+
 function addCurrencyRow(stack, value, symbol, primary) {
   const t = stack.addText(formatMoney(value, symbol));
   t.font = primary ? Font.boldSystemFont(22) : Font.semiboldSystemFont(14);
   t.textColor = primary ? COLORS.value : COLORS.muted;
   t.minimumScaleFactor = 0.5;
   t.lineLimit = 1;
+}
+
+function addVariationRow(stack, label, pct) {
+  const row = stack.addStack();
+  row.layoutHorizontally();
+  row.centerAlignContent();
+  const l = row.addText(label);
+  l.font = Font.mediumSystemFont(11);
+  l.textColor = COLORS.muted;
+  row.addSpacer();
+  const arrow = pct > 0 ? "▲ " : pct < 0 ? "▼ " : "";
+  const v = row.addText(`${arrow}${formatPct(pct)}`);
+  v.font = Font.semiboldSystemFont(11);
+  v.textColor = colorFor(pct);
 }
 
 async function buildWidget() {
@@ -84,6 +113,11 @@ async function buildWidget() {
     }
 
     w.addSpacer();
+
+    // Variações (semana / mês) na base.
+    addVariationRow(w, "Semana", s.weeklyPct);
+    w.addSpacer(2);
+    addVariationRow(w, "Mês", s.monthlyPct);
   } catch (e) {
     const err = w.addText("Sem dados");
     err.font = Font.semiboldSystemFont(14);
