@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/patrimony-control/sw.js', { scope: '/patrimony-control/' })})}
